@@ -45,4 +45,5 @@ public class Book extends BaseClass{
     public void setTitle(String title) {
         this.title = title.trim();
     }
+
 }

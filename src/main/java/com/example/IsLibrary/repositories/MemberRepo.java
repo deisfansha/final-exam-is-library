@@ -15,7 +15,6 @@ public interface MemberRepo extends JpaRepository<Member, Long> {
     Optional<Member> findByPhoneNumberAndIsDeletedIsFalse(String phoneNumber);
     Optional<Member> findByCodeMemberAndIsDeletedIsFalse(String codeNumber);
     Page<Member> findAllByIsDeletedIsFalseOrderByIdAsc(Pageable pageable);
-
     @Query("SELECT m FROM Member m ORDER BY m.id DESC")
     List<Member> findLast();
 }

@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class BookList {
+public class BookList extends BaseClass{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,7 +17,6 @@ public class BookList {
     @ManyToOne
     @JoinColumn(name = "code_book")
     private Book book;
-
 
     public BookList() {
     }

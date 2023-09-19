@@ -1,11 +1,10 @@
 package com.example.IsLibrary.services;
 
-import com.example.IsLibrary.dto.request.DtoMemberRequest;
 import com.example.IsLibrary.dto.response.DtoBookResponse;
-import com.example.IsLibrary.dto.response.DtoMemberResponse;
 import com.example.IsLibrary.models.Book;
-import com.example.IsLibrary.models.Member;
+import com.example.IsLibrary.models.BookList;
 import com.example.IsLibrary.models.Response;
+import com.example.IsLibrary.repositories.BookListRepo;
 import com.example.IsLibrary.repositories.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,12 +13,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BookService {
     @Autowired
     private BookRepo bookRepo;
+    @Autowired
+    private BookListRepo bookListRepo;
     private Integer code=0;
     public Boolean addBook(Book book, Response response){
         Optional<Book> existingBook = bookRepo.findByTitleAndAuthorAndIsDeletedIsFalse(book.getTitle(), book.getAuthor());
@@ -67,17 +69,24 @@ public class BookService {
 
     public Boolean softDelete(String code, Response response){
         Optional<Book> existingBook = bookRepo.findByCodeBookAndIsDeletedIsFalse(code);
-
         if (!existingBook.isPresent()){
-            response.setMessage("Member Not Found");
+            response.setMessage("Book Not Found");
             return false;
         }
 
+        List<BookList> existingBookList = bookListRepo.findByBookIdAndIsDeletedIsFalseAndIsAvailableIsTrue(existingBook.get().getId());
+
+        for (BookList listBook: existingBookList){
+            listBook.setDeleted(true);
+            bookListRepo.save(listBook);
+        }
         existingBook.get().setDeleted(true);
         bookRepo.save(existingBook.get());
         response.setData(new DtoBookResponse(existingBook.get().getCodeBook(), existingBook.get().getTitle(), existingBook.get().getAuthor()));
         return true;
     }
+
+
 
     private String generateCode(){
         code+=11;
