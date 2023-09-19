@@ -15,9 +15,12 @@ public class BookList {
     private String isbn;
     private Boolean isAvailable = true;
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "code_book")
     private Book book;
 
+
+    public BookList() {
+    }
 
     public Long getId() {
         return id;
@@ -32,7 +35,7 @@ public class BookList {
     }
 
     public void setIsbn(String isbn) {
-        this.isbn = isbn;
+        this.isbn = isbn.trim();
     }
 
     public Boolean getAvailable() {
