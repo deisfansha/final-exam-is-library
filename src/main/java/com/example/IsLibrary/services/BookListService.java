@@ -68,7 +68,7 @@ public class BookListService {
     }
 
     public Boolean updateStatus(Long id, BookList bookList, Response response){
-        Optional<BookList> existingBookList = bookListRepo.findByIdAndAndIsDeletedIsFalse(id);
+        Optional<BookList> existingBookList = bookListRepo.findByIdAndIsDeletedIsFalse(id);
         if (!existingBookList.isPresent()){
             response.setMessage("Book List not found");
             return false;

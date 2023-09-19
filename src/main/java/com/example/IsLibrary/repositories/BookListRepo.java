@@ -15,5 +15,5 @@ public interface BookListRepo extends JpaRepository<BookList, Long> {
     Long countByBookAndAndIsAvailableIsTrue(Book book);
     List<BookList> findByBookIdAndIsDeletedIsFalseAndIsAvailableIsTrue(Long codeBook);
     Optional<BookList> findByIdAndIsDeletedIsFalseAndIsAvailableIsTrue(Long id);
-    Optional<BookList> findByIdAndAndIsDeletedIsFalse(Long id);
+    Optional<BookList> findByIdAndIsDeletedIsFalse(Long id);
 }
