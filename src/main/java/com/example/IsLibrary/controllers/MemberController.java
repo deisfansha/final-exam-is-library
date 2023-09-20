@@ -2,7 +2,6 @@ package com.example.IsLibrary.controllers;
 
 import com.example.IsLibrary.dto.request.DtoMemberRequest;
 import com.example.IsLibrary.dto.response.DtoMemberResponse;
-import com.example.IsLibrary.models.Member;
 import com.example.IsLibrary.models.Response;
 import com.example.IsLibrary.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;

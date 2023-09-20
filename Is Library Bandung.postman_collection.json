@@ -1,0 +1,330 @@
+{
+	"info": {
+		"_postman_id": "7d67cb34-a203-4160-80bc-dc994d12bccc",
+		"name": "Is Library Bandung",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "26685604"
+	},
+	"item": [
+		{
+			"name": "Member",
+			"item": [
+				{
+					"name": "Add Member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Deisfansha Ramdhani\",\r\n    \"gender\": \"Laki - Laki\",\r\n    \"phone_number\": \"089693\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/members"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Member",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/members/006"
+					},
+					"response": []
+				},
+				{
+					"name": "Soft Delete Member",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/members/006"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Book",
+			"item": [
+				{
+					"name": "Add Book",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Deisfansha\",\r\n    \"author\": \"Laki - Laki\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/books"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Book",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Book",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8080/books/005"
+					},
+					"response": []
+				},
+				{
+					"name": "Soft Delete Book",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/books/11"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Book List",
+			"item": [
+				{
+					"name": "Add Book List",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"Si Kancil\",\r\n    \"isbn\": \"Endang\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/list-books"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Book List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/list-books/page?page=0&limit=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"list-books",
+								"page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "http://localhost:8080/list-books/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book List",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/list-books/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaction Book",
+			"item": [
+				{
+					"name": "Add Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"member\": \"008\",\r\n    \"id_book_list\": 2 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/transactions"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transactions/members?year=2023&month=9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"members"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "month",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Return Book",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "http://localhost:8080/transactions/2"
+					},
+					"response": []
+				},
+				{
+					"name": "View Borrow Book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transactions/pages?page=0&limit=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"pages"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Return Book",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/transactions/returns?isMulct=false&page=0&limit=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions",
+								"returns"
+							],
+							"query": [
+								{
+									"key": "isMulct",
+									"value": "false"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Top 5 Book",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "View Top 3 Penaltys",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

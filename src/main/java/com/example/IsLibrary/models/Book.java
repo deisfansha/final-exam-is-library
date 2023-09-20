@@ -14,6 +14,15 @@ public class Book extends BaseClass{
     private String title;
     private String author;
 
+    public Book() {
+    }
+
+    public Book(String codeBook, String title, String author) {
+        this.codeBook = codeBook;
+        this.title = title;
+        this.author = author;
+    }
+
     public String getAuthor() {
         return author;
     }

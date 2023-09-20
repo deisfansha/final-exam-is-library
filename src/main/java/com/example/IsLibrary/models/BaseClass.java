@@ -10,7 +10,6 @@ import java.util.Date;
 @MappedSuperclass
 public class BaseClass {
 
-    @JsonIgnore
     private Boolean isDeleted = false;
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ", timezone = "Asia/Jakarta")
@@ -18,6 +17,7 @@ public class BaseClass {
     @UpdateTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss.SSSZ", timezone = "Asia/Jakarta")
     private Date updatedAt;
+
 
     public Boolean getDeleted() {
         return isDeleted;
@@ -27,6 +27,7 @@ public class BaseClass {
         isDeleted = deleted;
     }
 
+    @JsonIgnore
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -35,6 +36,7 @@ public class BaseClass {
         this.createdAt = createdAt;
     }
 
+    @JsonIgnore
     public Date getUpdatedAt() {
         return updatedAt;
     }

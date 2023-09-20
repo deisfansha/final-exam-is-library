@@ -28,6 +28,23 @@ public class Transaction extends BaseClass{
     public Transaction() {
     }
 
+    public Transaction(Member member, BookList bookList, Date createDate, Date dueDate) {
+        this.member = member;
+        this.bookList = bookList;
+        this.createDate = createDate;
+        this.dueDate = dueDate;
+    }
+
+    public Transaction(Member member, BookList bookList, Date createDate, Date dueDate, Date returnDate, Boolean isMulct, Integer pay) {
+        this.member = member;
+        this.bookList = bookList;
+        this.createDate = createDate;
+        this.dueDate = dueDate;
+        this.returnDate = returnDate;
+        this.isMulct = isMulct;
+        this.pay = pay;
+    }
+
     public Long getId() {
         return id;
     }

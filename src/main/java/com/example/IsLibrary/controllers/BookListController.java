@@ -1,6 +1,7 @@
 package com.example.IsLibrary.controllers;
 
 import com.example.IsLibrary.dto.request.DtoBookListRequest;
+import com.example.IsLibrary.dto.response.DtoBookListIsbn;
 import com.example.IsLibrary.dto.response.DtoBookListResponse;
 import com.example.IsLibrary.models.BookList;
 import com.example.IsLibrary.models.Response;
@@ -40,7 +41,7 @@ public class BookListController {
 
     @GetMapping("/page")
     public ResponseEntity pageViewAll(@RequestParam int page, @RequestParam int limit){
-        Page<DtoBookListResponse> bookList = bookListService.pageView(page, limit);
+        Page<DtoBookListIsbn> bookList = bookListService.pageView(page, limit);
         if (bookList.isEmpty()){
             response.setMessage("Data Is Empty");
             response.setData(null);

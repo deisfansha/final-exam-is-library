@@ -2,8 +2,11 @@ package com.example.IsLibrary.controllers;
 
 import com.example.IsLibrary.dto.request.DtoMemberRequest;
 import com.example.IsLibrary.dto.request.DtoTransactionRequest;
+import com.example.IsLibrary.dto.response.Dto3MemberWithPenalty;
 import com.example.IsLibrary.dto.response.DtoBookListResponse;
+import com.example.IsLibrary.dto.response.DtoBorrowBookByMember;
 import com.example.IsLibrary.dto.response.DtoReturnBook;
+import com.example.IsLibrary.dto.response.DtoTop5Book;
 import com.example.IsLibrary.dto.response.DtoTransactionByMonth;
 import com.example.IsLibrary.dto.response.DtoTransactionResponse;
 import com.example.IsLibrary.models.Response;
@@ -72,7 +75,7 @@ public class TransactionController {
     }
     @GetMapping("/members")
     public ResponseEntity viewMember(@RequestParam int year, @RequestParam int month){
-        List<DtoTransactionByMonth> listTransaction = transactionService.getMemberTransactionByMonth(year, month);
+        List<DtoBorrowBookByMember> listTransaction = transactionService.getMemberTransactionByMonth(year, month);
         if (listTransaction.isEmpty()){
             response.setMessage("Data Is Empty");
             response.setData(null);
@@ -80,6 +83,34 @@ public class TransactionController {
         }else {
             response.setMessage("Success");
             response.setData(listTransaction);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @GetMapping("/top-books")
+    public ResponseEntity viewTopBook(){
+        List<DtoTop5Book> topBook = transactionService.top5Book();
+        if (topBook.isEmpty()){
+            response.setMessage("Data Is Empty");
+            response.setData(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }else {
+            response.setMessage("Success");
+            response.setData(topBook);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @GetMapping("/top-penaltys")
+    public ResponseEntity viewTopMemberPenalty(){
+        List<Dto3MemberWithPenalty> member = transactionService.top3MemberPenalty();
+        if (member.isEmpty()){
+            response.setMessage("Data Is Empty");
+            response.setData(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }else {
+            response.setMessage("Success");
+            response.setData(member);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }

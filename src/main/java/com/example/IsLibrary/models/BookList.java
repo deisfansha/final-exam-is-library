@@ -21,6 +21,12 @@ public class BookList extends BaseClass{
     public BookList() {
     }
 
+    public BookList(String isbn, Boolean isAvailable, Book book) {
+        this.isbn = isbn;
+        this.isAvailable = isAvailable;
+        this.book = book;
+    }
+
     public Long getId() {
         return id;
     }

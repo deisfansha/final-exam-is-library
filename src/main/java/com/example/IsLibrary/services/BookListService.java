@@ -49,19 +49,16 @@ public class BookListService {
         return true;
     }
 
-    public Page<DtoBookListResponse> pageView(int page, int limit){
-        Book book = bookRepo.findAllByIsDeletedIsFalseOrderByIdAsc();
-        Long total = bookListRepo.countByBookAndIsAvailableIsTrue(book);
+    public Page<DtoBookListIsbn> pageView(int page, int limit){
         Pageable pageable = PageRequest.of(page, limit);
-
-        Page<Book> result =  bookRepo.findAllByIsDeletedIsFalseOrderByIdAsc(pageable);
-        List<DtoBookListResponse> bookList = new ArrayList<>();
-        for (Book bookData: result.getContent()){
-            DtoBookListResponse bookListResponse = new DtoBookListResponse(
-                    bookData.getCodeBook(),bookData.getTitle(),bookData.getAuthor(), total);
-            bookList.add(bookListResponse);
+        Page<BookList> result =  bookListRepo.findByIsDeletedIsFalse(pageable);
+        List<DtoBookListIsbn> listBook = new ArrayList<>();
+        for (BookList bookData: result.getContent()){
+            DtoBookListIsbn bookListResponse = new DtoBookListIsbn(
+                    bookData.getBook().getTitle(),bookData.getIsbn(),bookData.getBook().getAuthor(), bookData.getAvailable());
+            listBook.add(bookListResponse);
         }
-        return new PageImpl(bookList, PageRequest.of(page, limit), result.getTotalPages());
+        return new PageImpl(listBook, PageRequest.of(page, limit), result.getTotalPages());
     }
 
     public Boolean updateStatus(Long id, BookList bookList, Response response){
