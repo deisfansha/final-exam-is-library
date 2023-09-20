@@ -30,7 +30,11 @@ public class MemberService {
         } else if (!isPhoneNumberValid(memberRequest.getPhoneNumber())){
             response.setMessage("Format Number appropriate");
             return false;
-        } else if (existingNumber.isPresent()) {
+        } else if (!(memberRequest.getGender().equalsIgnoreCase("Perempuan") || memberRequest.getGender().equalsIgnoreCase("Laki - Laki"))){
+            response.setMessage("Only 2 Gender");
+            return false;
+        }
+        else if (existingNumber.isPresent()) {
             response.setMessage("Phone Number is already exists");
             return false;
         }
@@ -55,6 +59,7 @@ public class MemberService {
     }
 
     public Page<DtoMemberResponse> pageView(int page, int limit){
+        if (memberRepo.count() == 0) seed();
         Pageable pageable = PageRequest.of(page, limit);
         Page<Member> result =  memberRepo.findAllByIsDeletedIsFalseOrderByIdAsc(pageable);
         return new PageImpl(result.getContent(), PageRequest.of(page, limit), result.getTotalPages());
@@ -112,5 +117,15 @@ public class MemberService {
 
     private Boolean isPhoneNumberValid(String phoneNumber){
         return phoneNumber.matches("^[0-9]{8,13}$");
+    }
+
+    private void seed(){
+        memberRepo.save(new Member("Kiki Eko", "005","08976538463", "Laki - Laki"));
+        memberRepo.save(new Member("Andreas", "006","08976878400", "Laki - Laki"));
+        memberRepo.save(new Member("Putri", "007","08566538400", "Perempuan"));
+        memberRepo.save(new Member("Cahyani", "008","0895627118", "Perempuan"));
+        memberRepo.save(new Member("Lazuardi", "009","08976538463", "Laki - Laki"));
+        memberRepo.save(new Member("Ika Rusid", "0010","0897762231", "Perempuan"));
+        memberRepo.save(new Member("Ika Rusid", "0011","0897762231", "Perempuan"));
     }
 }

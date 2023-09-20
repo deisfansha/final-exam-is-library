@@ -33,6 +33,13 @@ public class Member extends BaseClass{
         this.gender = gender;
     }
 
+    public Member(String name, String codeMember,String phoneNumber, String gender) {
+        this.name = name;
+        this.codeMember = codeMember;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     public Long getId() {
         return id;
     }

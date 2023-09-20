@@ -19,10 +19,14 @@ public class Transaction extends BaseClass{
     @ManyToOne
     @JoinColumn(name = "id_book")
     private BookList bookList;
+    private Date createDate;
     private Date dueDate;
     private Date returnDate;
     private Boolean isMulct;
     private Integer pay;
+
+    public Transaction() {
+    }
 
     public Long getId() {
         return id;
@@ -78,5 +82,13 @@ public class Transaction extends BaseClass{
 
     public void setPay(Integer pay) {
         this.pay = pay;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

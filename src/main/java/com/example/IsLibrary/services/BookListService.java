@@ -3,11 +3,8 @@ package com.example.IsLibrary.services;
 import com.example.IsLibrary.dto.request.DtoBookListRequest;
 import com.example.IsLibrary.dto.response.DtoBookListIsbn;
 import com.example.IsLibrary.dto.response.DtoBookListResponse;
-import com.example.IsLibrary.dto.response.DtoBookResponse;
-import com.example.IsLibrary.dto.response.DtoMemberResponse;
 import com.example.IsLibrary.models.Book;
 import com.example.IsLibrary.models.BookList;
-import com.example.IsLibrary.models.Member;
 import com.example.IsLibrary.models.Response;
 import com.example.IsLibrary.repositories.BookListRepo;
 import com.example.IsLibrary.repositories.BookRepo;
@@ -54,7 +51,7 @@ public class BookListService {
 
     public Page<DtoBookListResponse> pageView(int page, int limit){
         Book book = bookRepo.findAllByIsDeletedIsFalseOrderByIdAsc();
-        Long total = bookListRepo.countByBookAndAndIsAvailableIsTrue(book);
+        Long total = bookListRepo.countByBookAndIsAvailableIsTrue(book);
         Pageable pageable = PageRequest.of(page, limit);
 
         Page<Book> result =  bookRepo.findAllByIsDeletedIsFalseOrderByIdAsc(pageable);
@@ -84,6 +81,19 @@ public class BookListService {
         return true;
     }
 
+    public Boolean updateAvailableBook(Long id){
+        Optional<BookList> bookList = bookListRepo.findByIdAndIsDeletedIsFalse(id);
+        bookList.get().setAvailable(false);
+        bookListRepo.save(bookList.get());
+        return true;
+    }
+
+    public Boolean updateAvailableReturnBook(Long id){
+        Optional<BookList> bookList = bookListRepo.findByIdAndIsDeletedIsFalse(id);
+        bookList.get().setAvailable(true);
+        bookListRepo.save(bookList.get());
+        return true;
+    }
     public Boolean softDelete(Long id, Response response){
         Optional<BookList> existingBookList = bookListRepo.findByIdAndIsDeletedIsFalseAndIsAvailableIsTrue(id);
 

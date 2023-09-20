@@ -12,8 +12,9 @@ import java.util.Optional;
 @Repository
 public interface BookListRepo extends JpaRepository<BookList, Long> {
     Long countByBookIdAndIsAvailableIsTrue(Long id);
-    Long countByBookAndAndIsAvailableIsTrue(Book book);
+    Long countByBookAndIsAvailableIsTrue(Book book);
     List<BookList> findByBookIdAndIsDeletedIsFalseAndIsAvailableIsTrue(Long codeBook);
     Optional<BookList> findByIdAndIsDeletedIsFalseAndIsAvailableIsTrue(Long id);
     Optional<BookList> findByIdAndIsDeletedIsFalse(Long id);
+    BookList findAllByIsDeletedIsFalseOrderByIdAsc();
 }
