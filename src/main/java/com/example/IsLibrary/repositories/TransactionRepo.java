@@ -24,6 +24,8 @@ public interface TransactionRepo extends JpaRepository<Transaction, Long> {
     Page<Transaction> findByIsDeletedFalseAndReturnDateIsNullOrderByIdAsc(Pageable pageable);
     Page<Transaction> findByIsMulctAndIsDeletedFalseOrderByIdAsc(Boolean isMulct, Pageable pageable);
 
+    List<Transaction> findByMemberIdAndIsMulctIsNull(Long id);
+
     @Query("SELECT new com.example.IsLibrary.dto.response.DtoTop5Book(t.bookList, COUNT(t)) FROM Transaction t GROUP BY t.bookList ORDER BY COUNT(t) DESC")
     List<DtoTop5Book> findTop5BooksByLoanCount(Pageable pageable);
     @Query("SELECT new com.example.IsLibrary.dto.response.DtoBorrowBookByMember(t.member, COUNT(t.bookList)) FROM Transaction t WHERE t.createDate BETWEEN :startDate AND :endDate GROUP BY t.member ORDER BY COUNT(t.bookList) DESC")

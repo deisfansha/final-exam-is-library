@@ -4,7 +4,9 @@ import com.example.IsLibrary.dto.request.DtoMemberRequest;
 import com.example.IsLibrary.dto.response.DtoMemberResponse;
 import com.example.IsLibrary.models.Member;
 import com.example.IsLibrary.models.Response;
+import com.example.IsLibrary.models.Transaction;
 import com.example.IsLibrary.repositories.MemberRepo;
+import com.example.IsLibrary.repositories.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class MemberService {
     @Autowired
     private MemberRepo memberRepo;
+
+    @Autowired
+    private TransactionRepo transactionRepo;
 
     public Boolean addMember(DtoMemberRequest memberRequest, Response response){
         Optional<Member> existingNumber = memberRepo.findByPhoneNumberAndIsDeletedIsFalse(memberRequest.getPhoneNumber());
@@ -98,9 +103,15 @@ public class MemberService {
 
     public Boolean softDelete(String code, Response response){
         Optional<Member> existingMember = memberRepo.findByCodeMemberAndIsDeletedIsFalse(code);
-
         if (!existingMember.isPresent()){
             response.setMessage("Member Not Found");
+            return false;
+        }
+
+        List<Transaction> existingBorrowBook = transactionRepo.findByMemberIdAndIsMulctIsNull(existingMember.get().getId());
+
+        if (!existingBorrowBook.isEmpty()){
+            response.setMessage("The member is still borrowing books");
             return false;
         }
 
