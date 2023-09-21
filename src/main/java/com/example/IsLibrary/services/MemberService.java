@@ -121,7 +121,6 @@ public class MemberService {
                 existingMember.get().getName(),
                 existingMember.get().getGender(),
                 existingMember.get().getPhoneNumber()));
-
         return true;
     }
 
