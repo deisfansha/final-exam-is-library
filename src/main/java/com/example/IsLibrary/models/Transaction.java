@@ -1,5 +1,8 @@
 package com.example.IsLibrary.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.util.Date;
 
+@Data
+@AllArgsConstructor
 @Entity
 public class Transaction extends BaseClass{
     @Id
@@ -22,90 +27,9 @@ public class Transaction extends BaseClass{
     private Date createDate;
     private Date dueDate;
     private Date returnDate;
-    private Boolean isMulct;
+    private Boolean isPenalty;
     private Integer pay;
 
     public Transaction() {
-    }
-
-    public Transaction(Member member, BookList bookList, Date createDate, Date dueDate) {
-        this.member = member;
-        this.bookList = bookList;
-        this.createDate = createDate;
-        this.dueDate = dueDate;
-    }
-
-    public Transaction(Member member, BookList bookList, Date createDate, Date dueDate, Date returnDate, Boolean isMulct, Integer pay) {
-        this.member = member;
-        this.bookList = bookList;
-        this.createDate = createDate;
-        this.dueDate = dueDate;
-        this.returnDate = returnDate;
-        this.isMulct = isMulct;
-        this.pay = pay;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public BookList getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(BookList bookList) {
-        this.bookList = bookList;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public Date getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(Date returnDate) {
-        this.returnDate = returnDate;
-    }
-
-    public Boolean getMulct() {
-        return isMulct;
-    }
-
-    public void setMulct(Boolean mulct) {
-        isMulct = mulct;
-    }
-
-    public Integer getPay() {
-        return pay;
-    }
-
-    public void setPay(Integer pay) {
-        this.pay = pay;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
     }
 }

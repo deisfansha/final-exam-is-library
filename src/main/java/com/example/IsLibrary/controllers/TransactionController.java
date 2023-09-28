@@ -49,70 +49,43 @@ public class TransactionController {
     @GetMapping("/pages")
     public ResponseEntity pageViewAll(@RequestParam int page, @RequestParam int limit){
         Page<DtoTransactionResponse> transactionLists = transactionService.viewByBorrow(page, limit);
-        if (transactionLists.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(transactionLists);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+        response.setMessage("Success");
+        response.setData(transactionLists);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/returns")
-    public ResponseEntity pageViewReturn(@RequestParam Boolean isMulct, int page, @RequestParam int limit){
-        Page<DtoReturnBook> transactionLists = transactionService.viewReturnBook(isMulct, page, limit);
-        if (transactionLists.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(transactionLists);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+    public ResponseEntity pageViewReturn(@RequestParam Boolean isPenalty, int page, @RequestParam int limit){
+        Page<DtoReturnBook> transactionLists = transactionService.viewReturnBook(isPenalty, page, limit);
+        response.setMessage("Success");
+        response.setData(transactionLists);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @GetMapping("/members")
     public ResponseEntity viewMember(@RequestParam int year, @RequestParam int month){
         List<DtoBorrowBookByMember> listTransaction = transactionService.getMemberTransactionByMonth(year, month);
-        if (listTransaction.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(listTransaction);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+        response.setMessage("Success");
+        response.setData(listTransaction);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @GetMapping("/top-books")
     public ResponseEntity viewTopBook(){
         List<DtoTop5Book> topBook = transactionService.top5Book();
-        if (topBook.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(topBook);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+        response.setMessage("Success");
+        response.setData(topBook);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @GetMapping("/top-penaltys")
     public ResponseEntity viewTopMemberPenalty(){
         List<Dto3MemberWithPenalty> member = transactionService.top3MemberPenalty();
-        if (member.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(member);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+        response.setMessage("Success");
+        response.setData(member);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+
     }
 
     @PutMapping("/{id}")

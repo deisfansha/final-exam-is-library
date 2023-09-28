@@ -1,29 +1,17 @@
 package com.example.IsLibrary.dto.response;
 
-import com.example.IsLibrary.models.Member;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
 public class Dto3MemberWithPenalty {
-    private Member member;
-    private Long payFee;
+    @JsonProperty("code_member")
+    private String code;
+    private String name;
+    private Long pay;
 
-    public Dto3MemberWithPenalty(Member member, Long payFee) {
-        this.member = member;
-        this.payFee = payFee;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public Long getPayFee() {
-        return payFee;
-    }
-
-    public void setPayFee(Long payFee) {
-        this.payFee = payFee;
+    public Dto3MemberWithPenalty() {
     }
 }

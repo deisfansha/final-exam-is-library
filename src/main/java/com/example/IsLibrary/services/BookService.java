@@ -22,7 +22,6 @@ public class BookService {
     private BookRepo bookRepo;
     @Autowired
     private BookListRepo bookListRepo;
-    private Integer code=0;
     public Boolean addBook(Book book, Response response){
         Optional<Book> existingBook = bookRepo.findByTitleAndAuthorAndIsDeletedIsFalse(book.getTitle(), book.getAuthor());
         if (book.getTitle().isEmpty() || book.getAuthor().isEmpty()){
@@ -33,7 +32,7 @@ public class BookService {
             return false;
         }
 
-        book.setCodeBook(generateCode());
+        book.setCodeBook(String.valueOf(bookRepo.count()*11));
         bookRepo.save(book);
         response.setData(new DtoBookResponse(book.getCodeBook(), book.getTitle(), book.getAuthor()));
         return true;
@@ -84,10 +83,5 @@ public class BookService {
         bookRepo.save(existingBook.get());
         response.setData(new DtoBookResponse(existingBook.get().getCodeBook(), existingBook.get().getTitle(), existingBook.get().getAuthor()));
         return true;
-    }
-
-    private String generateCode(){
-        code+=11;
-        return String.valueOf(code);
     }
 }

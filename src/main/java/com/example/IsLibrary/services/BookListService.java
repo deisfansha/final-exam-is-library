@@ -40,11 +40,8 @@ public class BookListService {
             return false;
         }
 
-        BookList bookList = new BookList();
-        bookList.setIsbn(bookListRequest.getIsbn());
-        bookList.setBook(existingBook.get());
+        BookList bookList = new BookList(null, bookListRequest.getIsbn().trim(), true, existingBook.get());
         bookListRepo.save(bookList);
-
         response.setData(new DtoBookListResponse(bookList.getBook().getCodeBook(),bookList.getBook().getTitle(), bookList.getBook().getAuthor(), bookListRepo.countByBookIdAndIsAvailableIsTrue(bookList.getBook().getId())));
         return true;
     }
@@ -55,7 +52,7 @@ public class BookListService {
         List<DtoBookListIsbn> listBook = new ArrayList<>();
         for (BookList bookData: result.getContent()){
             DtoBookListIsbn bookListResponse = new DtoBookListIsbn(
-                    bookData.getBook().getTitle(),bookData.getIsbn(),bookData.getBook().getAuthor(), bookData.getAvailable());
+                    bookData.getBook().getTitle(),bookData.getIsbn(),bookData.getBook().getAuthor(), bookData.getIsAvailable());
             listBook.add(bookListResponse);
         }
         return new PageImpl(listBook, PageRequest.of(page, limit), result.getTotalPages());
@@ -66,28 +63,28 @@ public class BookListService {
         if (!existingBookList.isPresent()){
             response.setMessage("Book List not found");
             return false;
-        } else if (bookList.getAvailable() == null){
+        } else if (bookList.getIsAvailable() == null){
             response.setMessage("Data must be filled in");
             return false;
         }
 
-        existingBookList.get().setAvailable(bookList.getAvailable());
+        existingBookList.get().setIsAvailable(bookList.getIsAvailable());
         bookListRepo.save(existingBookList.get());
         response.setData(new DtoBookListIsbn(existingBookList.get().getBook().getTitle(), existingBookList.get().getIsbn(), existingBookList.get().getBook().getAuthor(),
-                existingBookList.get().getAvailable()));
+                existingBookList.get().getIsAvailable()));
         return true;
     }
 
     public Boolean updateAvailableBook(Long id){
         Optional<BookList> bookList = bookListRepo.findByIdAndIsDeletedIsFalse(id);
-        bookList.get().setAvailable(false);
+        bookList.get().setIsAvailable(false);
         bookListRepo.save(bookList.get());
         return true;
     }
 
     public Boolean updateAvailableReturnBook(Long id){
         Optional<BookList> bookList = bookListRepo.findByIdAndIsDeletedIsFalse(id);
-        bookList.get().setAvailable(true);
+        bookList.get().setIsAvailable(true);
         bookListRepo.save(bookList.get());
         return true;
     }
@@ -102,7 +99,7 @@ public class BookListService {
         existingBookList.get().setDeleted(true);
         bookListRepo.save(existingBookList.get());
         response.setData(new DtoBookListIsbn(existingBookList.get().getBook().getTitle(), existingBookList.get().getIsbn(), existingBookList.get().getBook().getAuthor(),
-                existingBookList.get().getAvailable()));
+                existingBookList.get().getIsAvailable()));
         return true;
     }
 

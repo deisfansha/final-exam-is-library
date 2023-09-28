@@ -40,15 +40,9 @@ public class BookController {
     @GetMapping("/page")
     public ResponseEntity pageViewAll(@RequestParam int page, @RequestParam int limit){
         Page<DtoBookResponse> allBooks = bookService.pageView(page, limit);
-        if (allBooks.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(allBooks);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+        response.setMessage("Success");
+        response.setData(allBooks);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/{code}")

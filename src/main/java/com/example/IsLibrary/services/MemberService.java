@@ -44,20 +44,10 @@ public class MemberService {
             return false;
         }
 
-        int code;
-        if (getLastId.isEmpty()){
-            code = 5;
-        }else {
-            code = Math.toIntExact(lastMember.getId() + 5);
-        }
-
+        int code  = (int) (memberRepo.count() + 5);
         String codeNumber = "00"+code;
 
-        Member member = new Member();
-        member.setGender(memberRequest.getGender());
-        member.setName(memberRequest.getName());
-        member.setPhoneNumber(memberRequest.getPhoneNumber());
-        member.setCodeMember(codeNumber);
+        Member member = new Member(null, memberRequest.getName().trim(),codeNumber, memberRequest.getPhoneNumber().trim(),memberRequest.getGender());
         memberRepo.save(member);
         response.setData(new DtoMemberResponse(member.getCodeMember(), member.getName(),  member.getGender(), member.getPhoneNumber()));
         return true;
@@ -108,7 +98,7 @@ public class MemberService {
             return false;
         }
 
-        List<Transaction> existingBorrowBook = transactionRepo.findByMemberIdAndIsMulctIsNull(existingMember.get().getId());
+        List<Transaction> existingBorrowBook = transactionRepo.findByMemberIdAndIsPenaltyIsNull(existingMember.get().getId());
 
         if (!existingBorrowBook.isEmpty()){
             response.setMessage("The member is still borrowing books");

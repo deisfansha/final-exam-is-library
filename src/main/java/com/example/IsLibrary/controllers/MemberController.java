@@ -40,15 +40,9 @@ public class MemberController {
     @GetMapping("/page")
     public ResponseEntity pageViewAll(@RequestParam int page, @RequestParam int limit){
         Page<DtoMemberResponse> memberList = memberService.pageView(page, limit);
-        if (memberList.isEmpty()){
-            response.setMessage("Data Is Empty");
-            response.setData(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }else {
-            response.setMessage("Success");
-            response.setData(memberList);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
+        response.setMessage("Success");
+        response.setData(memberList);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/{code}")
