@@ -3,7 +3,6 @@ package com.example.IsLibrary.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.extern.java.Log;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,4 +21,6 @@ public class Book extends BaseClass{
     private String title;
     private String author;
 
+    public Book() {
+    }
 }

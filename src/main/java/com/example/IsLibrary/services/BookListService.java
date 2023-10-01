@@ -28,6 +28,7 @@ public class BookListService {
 
     public Boolean addBookList(DtoBookListRequest bookListRequest, Response response){
         Optional<Book> existingBook = bookRepo.findByCodeBookAndIsDeletedIsFalse(bookListRequest.getCodeBook());
+        Optional<BookList> existingBookList = bookListRepo.findByIsbnAndIsDeletedIsFalse(bookListRequest.getIsbn());
 
         if (bookListRequest.getCodeBook().isEmpty() || bookListRequest.getIsbn().isEmpty()){
             response.setMessage("Data must be filled in");
@@ -37,6 +38,9 @@ public class BookListService {
             return false;
         } else if (bookListRequest.getIsbn().matches("^{8,13}$")) {
             response.setMessage("Isbn must have 8 to 13 characters");
+            return false;
+        } else if (!existingBookList.isPresent()) {
+            response.setMessage("Isbn is already exists");
             return false;
         }
 

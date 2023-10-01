@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,12 @@ public class BookService {
     public Page<DtoBookResponse> pageView(int page, int limit){
         Pageable pageable = PageRequest.of(page, limit);
         Page<Book> result =  bookRepo.findAllByIsDeletedIsFalseOrderByIdAsc(pageable);
-        return new PageImpl(result.getContent(), PageRequest.of(page, limit), result.getTotalPages());
+        List<DtoBookResponse> dataBook = new ArrayList<>();
+        for(Book books : result.getContent()){
+            DtoBookResponse listBook = new DtoBookResponse(books.getCodeBook(), books.getTitle(), books.getAuthor());
+            dataBook.add(listBook);
+        }
+        return new PageImpl(dataBook, PageRequest.of(page, limit), result.getTotalPages());
     }
 
     public Boolean updateBook(String code, Book book, Response response){
@@ -54,14 +60,22 @@ public class BookService {
         } else if (book.getTitle().isEmpty() || book.getAuthor().isEmpty()){
             response.setMessage("Data must be filled in");
             return false;
-        } else if (dataBook.isPresent()) {
-            response.setMessage("Book is already exists");
-            return false;
         }
 
-        existingBook.get().setTitle(book.getTitle());
-        existingBook.get().setAuthor(book.getAuthor());
-        bookRepo.save(existingBook.get());
+        if(existingBook.get().getAuthor().equalsIgnoreCase(book.getAuthor()) &&
+                existingBook.get().getTitle().equalsIgnoreCase(book.getTitle())){
+            response.setMessage("Data no changes");
+        }else {
+            if (dataBook.isPresent()) {
+                response.setMessage("Book is already exists");
+                return false;
+            }
+            response.setMessage("Success");
+            existingBook.get().setTitle(book.getTitle());
+            existingBook.get().setAuthor(book.getAuthor());
+            bookRepo.save(existingBook.get());
+        }
+
         response.setData(new DtoBookResponse(existingBook.get().getCodeBook(), existingBook.get().getTitle(), existingBook.get().getAuthor()));
         return true;
     }

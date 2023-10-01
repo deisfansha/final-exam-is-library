@@ -18,4 +18,5 @@ public interface BookListRepo extends JpaRepository<BookList, Long> {
     Optional<BookList> findByIdAndIsDeletedIsFalseAndIsAvailableIsTrue(Long id);
     Optional<BookList> findByIdAndIsDeletedIsFalse(Long id);
     Page<BookList> findByIsDeletedIsFalse(Pageable pageable);
+    Optional<BookList> findByIsbnAndIsDeletedIsFalse(String isbn);
 }

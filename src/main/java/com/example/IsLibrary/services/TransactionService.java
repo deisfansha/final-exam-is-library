@@ -170,9 +170,9 @@ public class TransactionService {
         Member m2 = new Member(null,"Andreas", "006","08976878400", "Laki - Laki");
         Member m3 = new Member(null,"Cahyani", "008","0895627118", "Perempuan");
         Member m4 = new Member(null,"Ika Rusid", "0010","0897762231", "Perempuan");
-        Member m5 = new Member(null,"Lazuardi", "009","08976538463", "Laki - Laki");
-        Member m6 = new Member(null,"Darusman", "0011","0897762231", "Laki - Laki");
-        Member m7 = new Member(null,"Putri", "007","08566538400", "Perempuan");
+        Member m5 = new Member(null,"Lazuardi", "009","085067457382", "Laki - Laki");
+        Member m6 = new Member(null,"Darusman", "0011","08978254449", "Laki - Laki");
+        Member m7 = new Member(null,"Putri", "007","08586542234", "Perempuan");
         memberRepo.saveAll(Arrays.asList(m1,m2,m3,m4,m5,m6,m7));
 
         Book b1 = new Book(null,"11", "Soekarno","Budoyono");

@@ -52,7 +52,6 @@ public class MemberController {
             response.setData(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }else {
-            response.setMessage("Success");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }

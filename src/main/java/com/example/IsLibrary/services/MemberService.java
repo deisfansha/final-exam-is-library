@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +22,12 @@ import java.util.Optional;
 public class MemberService {
     @Autowired
     private MemberRepo memberRepo;
-
     @Autowired
     private TransactionRepo transactionRepo;
 
     public Boolean addMember(DtoMemberRequest memberRequest, Response response){
         Optional<Member> existingNumber = memberRepo.findByPhoneNumberAndIsDeletedIsFalse(memberRequest.getPhoneNumber());
-        List<Member> getLastId = memberRepo.findLast();
-        Member lastMember = getLastId.get(0);
+
         if ((memberRequest.getName().isEmpty() || memberRequest.getGender().isEmpty()) || memberRequest.getPhoneNumber().isEmpty()){
             response.setMessage("Data must be filled in");
             return false;
@@ -55,13 +54,18 @@ public class MemberService {
 
     public Page<DtoMemberResponse> pageView(int page, int limit){
         Pageable pageable = PageRequest.of(page, limit);
-        Page<Member> result =  memberRepo.findAllByIsDeletedIsFalseOrderByIdAsc(pageable);
-        return new PageImpl(result.getContent(), PageRequest.of(page, limit), result.getTotalPages());
+        Page<Member> result =  memberRepo.findAllByIsDeletedIsFalseOrderByNameAsc(pageable);
+        List<DtoMemberResponse> listMember = new ArrayList<>();
+        for (Member members: result.getContent()){
+            DtoMemberResponse memberResponse = new DtoMemberResponse(members.getCodeMember(),members.getName(),
+                    members.getGender(), members.getPhoneNumber());
+            listMember.add(memberResponse);
+        }
+        return new PageImpl(listMember, PageRequest.of(page, limit), result.getTotalPages());
     }
 
     public Boolean updateMember(String code, DtoMemberRequest memberRequest, Response response){
         Optional<Member> existingMember = memberRepo.findByCodeMemberAndIsDeletedIsFalse(code);
-        Optional<Member> existingNumber = memberRepo.findByPhoneNumberAndIsDeletedIsFalse(memberRequest.getPhoneNumber());
 
         if (!existingMember.isPresent()){
             response.setMessage("Member Not Found");
@@ -69,15 +73,17 @@ public class MemberService {
         } else if (!isPhoneNumberValid(memberRequest.getPhoneNumber())){
             response.setMessage("Format Number appropriate");
             return false;
-        } else if (existingNumber.isPresent()) {
-            response.setMessage("Phone Number is already exists");
-            return false;
         }
 
         if (existingMember.get().getName().equalsIgnoreCase(memberRequest.getName()) &&
                 existingMember.get().getPhoneNumber().equalsIgnoreCase(memberRequest.getPhoneNumber())){
             response.setMessage("Data No Changes");
-        } else {
+        }else {
+            Optional<Member> existingNumber = memberRepo.findByPhoneNumberAndIsDeletedIsFalse(memberRequest.getPhoneNumber());
+            if (existingNumber.isPresent()) {
+                response.setMessage("Phone Number is already exists");
+                return false;
+            }
             existingMember.get().setName(memberRequest.getName());
             existingMember.get().setPhoneNumber(memberRequest.getPhoneNumber());
             memberRepo.save(existingMember.get());
