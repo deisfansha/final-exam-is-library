@@ -49,13 +49,13 @@ public class TransactionService {
     private BookListService bookListService;
     public Boolean addTransaction(DtoTransactionRequest transactionRequest, Response response){
         Optional<Member> existingMember = memberRepo.findByCodeMemberAndIsDeletedIsFalse(transactionRequest.getCodeMember());
-        Optional<BookList> existingBookList = bookListRepo.findByIdAndIsDeletedIsFalseAndIsAvailableIsTrue(transactionRequest.getIdBookList());
+        Optional<BookList> existingBookList = bookListRepo.findByIsbnAndIsDeletedIsFalseAndIsAvailableIsTrue(transactionRequest.getIsbn());
 
         if (!existingMember.isPresent()){
             response.setMessage("Member Not Found");
             return false;
         } else if (!existingBookList.isPresent()) {
-            response.setMessage("Book List Not Found");
+            response.setMessage("Isbn Book Not Found");
             return false;
         }
 
@@ -64,14 +64,15 @@ public class TransactionService {
 
         calendar.add(Calendar.DAY_OF_YEAR, 7);
         Date newDate = calendar.getTime();
-        Transaction transaction = new Transaction(null, existingMember.get(), existingBookList.get(), currentDate.getTime(), newDate, null, null, null);
+        Transaction transaction = new Transaction(null, codeBorrow(existingMember.get().getCodeMember()+transactionRepo.count(),
+                existingBookList.get().getIsbn()), existingMember.get(), existingBookList.get(), currentDate.getTime(), newDate, null, null, null);
 
         transactionRepo.save(transaction);
-        bookListService.updateAvailableBook(transactionRequest.getIdBookList());
+        bookListService.updateAvailableBook(transactionRequest.getIsbn());
 
-        response.setData(new DtoTransactionResponse(existingBookList.get().getBook().getTitle(),
-                existingBookList.get().getIsbn(), existingBookList.get().getBook().getAuthor(),
-                existingMember.get().getName(), String.valueOf(transaction.getDueDate())));
+        response.setData(new DtoTransactionResponse(transaction.getCodeBorrow(),
+                existingBookList.get().getIsbn(), existingBookList.get().getBook().getTitle(),existingBookList.get().getBook().getAuthor(),
+                existingMember.get().getName(), String.valueOf(transaction.getCreateDate()), String.valueOf(transaction.getDueDate())));
         return true;
     }
 
@@ -119,10 +120,9 @@ public class TransactionService {
         Page<Transaction> result =  transactionRepo.findByIsDeletedFalseAndReturnDateIsNullOrderByIdAsc(pageable);
         List<DtoTransactionResponse> transactions = new ArrayList<>();
         for (Transaction transactionData: result.getContent()){
-            DtoTransactionResponse transactionResponse = new DtoTransactionResponse(
-                    transactionData.getBookList().getBook().getTitle(),
-                    transactionData.getBookList().getIsbn(), transactionData.getBookList().getBook().getAuthor(),
-                    transactionData.getMember().getName(),String.valueOf(transactionData.getDueDate()));
+            DtoTransactionResponse transactionResponse = new DtoTransactionResponse(transactionData.getCodeBorrow(),
+                    transactionData.getBookList().getIsbn(), transactionData.getBookList().getBook().getTitle(),transactionData.getBookList().getBook().getAuthor(),
+                    transactionData.getMember().getName(),String.valueOf(transactionData.getCreateDate()), String.valueOf(transactionData.getDueDate()));
             transactions.add(transactionResponse);
         }
         return new PageImpl(transactions, PageRequest.of(page, limit), result.getTotalPages());
@@ -219,104 +219,109 @@ public class TransactionService {
         Date date1 = calendar1.getTime();
         calendar1.set(2023, Calendar.JULY, 19);
         Date due1 = calendar1.getTime();
-        Transaction t1 = new Transaction(null,m1, l3, date1, due1,null, null, null);
+        Transaction t1 = new Transaction(null, codeBorrow(m1.getCodeMember(), l3.getIsbn())+"0",m1, l3, date1, due1,null, null, null);
 
         Calendar calendar2 = Calendar.getInstance();
         calendar2.set(2023, Calendar.APRIL, 15);
         Date date2 = calendar2.getTime();
         calendar2.set(2023, Calendar.APRIL, 22);
         Date due2 = calendar2.getTime();
-        Transaction t2 = new Transaction(null ,m1, l5, date2, due2,null, null, null);
+        Transaction t2 = new Transaction(null ,codeBorrow(m1.getCodeMember(), l5.getIsbn())+"1",m1, l5, date2, due2,null, null, null);
 
         Calendar calendar3 = Calendar.getInstance();
         calendar3.set(2023, Calendar.MARCH, 28);
         Date date3 = calendar3.getTime();
         calendar3.set(2023, Calendar.APRIL, 4);
         Date due3 = calendar3.getTime();
-        Transaction t3 = new Transaction(null,m2, l6, date3, due3,null, null, null);
+        Transaction t3 = new Transaction(null,codeBorrow(m2.getCodeMember(), l6.getIsbn())+"2",m2, l6, date3, due3,null, null, null);
 
         Calendar calendar4 = Calendar.getInstance();
         calendar4.set(2023, Calendar.FEBRUARY, 10);
         Date date4 = calendar4.getTime();
         calendar4.set(2023, Calendar.FEBRUARY, 17);
         Date due4 = calendar4.getTime();
-        Transaction t4 = new Transaction(null, m2, l9, date4, due4,null, null, null);
+        Transaction t4 = new Transaction(null,codeBorrow(m2.getCodeMember(), l9.getIsbn())+"3", m2, l9, date4, due4,null, null, null);
 
         Calendar calendar5 = Calendar.getInstance();
         calendar5.set(2023, Calendar.AUGUST, 2);
         Date date5 = calendar5.getTime();
         calendar5.set(2023, Calendar.AUGUST, 9);
         Date due5 = calendar5.getTime();
-        Transaction t5 = new Transaction(null, m3, l11, date5, due5,null, null, null);
+        Transaction t5 = new Transaction(null,codeBorrow(m3.getCodeMember(), l11.getIsbn())+"4", m3, l11, date5, due5,null, null, null);
 
         Calendar calendar6 = Calendar.getInstance();
         calendar6.set(2023, Calendar.JANUARY, 21);
         Date date6 = calendar6.getTime();
         calendar6.set(2023, Calendar.JANUARY, 28);
         Date due6 = calendar6.getTime();
-        Transaction t6 = new Transaction(null,m3, l14, date6, due6, null, null, null);
+        Transaction t6 = new Transaction(null ,codeBorrow(m3.getCodeMember(), l14.getIsbn())+"5",m3, l14, date6, due6, null, null, null);
 
         Calendar calendar7 = Calendar.getInstance();
         calendar7.set(2023, Calendar.MAY, 13);
         Date date7 = calendar7.getTime();
         calendar7.set(2023, Calendar.MAY, 20);
         Date due7 = calendar7.getTime();
-        Transaction t7 = new Transaction(null, m4, l16, date7, due7,null, null, null);
+        Transaction t7 = new Transaction(null,codeBorrow(m4.getCodeMember(), l16.getIsbn())+"6", m4, l16, date7, due7,null, null, null);
 
         Calendar calendar8 = Calendar.getInstance();
         calendar8.set(2023, Calendar.JULY, 20);
         Date date8 = calendar8.getTime();
         calendar8.set(2023, Calendar.JULY, 27);
         Date due8 = calendar8.getTime();
-        Transaction t8 = new Transaction(null, m4, l18, date8, due8,null, null, null);
+        Transaction t8 = new Transaction(null,codeBorrow(m4.getCodeMember(), l18.getIsbn())+"7", m4, l18, date8, due8,null, null, null);
 
         Calendar calendar9 = Calendar.getInstance();
         calendar9.set(2023, Calendar.AUGUST, 22);
-        Date date9 = calendar8.getTime();
+        Date date9 = calendar9.getTime();
         calendar9.set(2023, Calendar.AUGUST, 29);
-        Date due9 = calendar8.getTime();
+        Date due9 = calendar9.getTime();
         calendar9.set(2023, Calendar.AUGUST, 30);
         Date r9 = calendar9.getTime();
-        Transaction t9 = new Transaction(null, m4, l1, date9, due9,r9, true, 20000);
+        Transaction t9 = new Transaction(null,codeBorrow(m4.getCodeMember(), l1.getIsbn())+"8", m4, l1, date9, due9,r9, true, 20000);
 
         Calendar calendar10 = Calendar.getInstance();
         calendar10.set(2023, Calendar.JULY, 14);
-        Date date10 = calendar8.getTime();
+        Date date10 = calendar10.getTime();
         calendar10.set(2023, Calendar.JULY, 21);
-        Date due10 = calendar8.getTime();
+        Date due10 = calendar10.getTime();
         calendar10.set(2023, Calendar.JULY, 24);
-        Date r10 = calendar9.getTime();
-        Transaction t10 = new Transaction(null,m4, l16, date10, due10,r10, true, 30000);
+        Date r10 = calendar10.getTime();
+        Transaction t10 = new Transaction(null,codeBorrow(m4.getCodeMember(), l16.getIsbn())+"9",m4, l16, date10, due10,r10, true, 30000);
 
         Calendar calendar11 = Calendar.getInstance();
         calendar11.set(2023, Calendar.FEBRUARY, 11);
-        Date date11 = calendar8.getTime();
+        Date date11 = calendar11.getTime();
         calendar11.set(2023, Calendar.FEBRUARY, 18);
-        Date due11 = calendar8.getTime();
+        Date due11 = calendar11.getTime();
         calendar11.set(2023, Calendar.FEBRUARY, 20);
-        Date r11 = calendar9.getTime();
-        Transaction t11 = new Transaction(null,m4, l8, date11, due11,r11, true, 20000);
+        Date r11 = calendar11.getTime();
+        Transaction t11 = new Transaction(null,codeBorrow(m4.getCodeMember(), l8.getIsbn())+"10",m4, l8, date11, due11,r11, true, 20000);
 
         Calendar calendar12 = Calendar.getInstance();
         calendar12.set(2023, Calendar.MARCH, 1);
-        Date date12 = calendar8.getTime();
+        Date date12 = calendar12.getTime();
         calendar12.set(2023, Calendar.MARCH, 8);
-        Date due12 = calendar8.getTime();
+        Date due12 = calendar12.getTime();
         calendar12.set(2023, Calendar.MARCH, 9);
-        Date r12 = calendar9.getTime();
-        Transaction t12 = new Transaction(null,m6, l11, date12, due12,r12, true, 10000);
+        Date r12 = calendar12.getTime();
+        Transaction t12 = new Transaction(null ,codeBorrow(m6.getCodeMember(), l11.getIsbn())+"11",m6, l11, date12, due12,r12, true, 10000);
 
         Calendar calendar13 = Calendar.getInstance();
         calendar13.set(2023, Calendar.MARCH, 19);
-        Date date13 = calendar8.getTime();
+        Date date13 = calendar13.getTime();
         calendar13.set(2023, Calendar.MARCH, 26);
-        Date due13 = calendar8.getTime();
+        Date due13 = calendar13.getTime();
         calendar13.set(2023, Calendar.MARCH, 29);
-        Date r13 = calendar9.getTime();
-        Transaction t13 = new Transaction(null,m2, l17, date13, due13,r13, true, 30000);
+        Date r13 = calendar13.getTime();
+        Transaction t13 = new Transaction(null ,codeBorrow(m2.getCodeMember(), l17.getIsbn())+"12",m2, l17, date13, due13,r13, true, 30000);
 
         transactionRepo.saveAll(Arrays.asList(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12, t13));
 
     }
 
+    public String codeBorrow(String member, String book){
+        String m = member.substring(member.length()-2);
+        String bl = book.substring(book.length() -3);
+        return bl+ m;
+    }
 }

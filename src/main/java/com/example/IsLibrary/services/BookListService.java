@@ -15,8 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,7 +28,10 @@ public class BookListService {
         Optional<Book> existingBook = bookRepo.findByCodeBookAndIsDeletedIsFalse(bookListRequest.getCodeBook());
         Optional<BookList> existingBookList = bookListRepo.findByIsbnAndIsDeletedIsFalse(bookListRequest.getIsbn());
 
-        if (bookListRequest.getCodeBook().isEmpty() || bookListRequest.getIsbn().isEmpty()){
+        if (!existingBookList.isPresent()) {
+            response.setMessage("Isbn is already exists");
+            return false;
+        }else if (bookListRequest.getCodeBook().isEmpty() || bookListRequest.getIsbn().isEmpty()){
             response.setMessage("Data must be filled in");
             return false;
         } else if (!existingBook.isPresent()){
@@ -39,27 +40,18 @@ public class BookListService {
         } else if (bookListRequest.getIsbn().matches("^{8,13}$")) {
             response.setMessage("Isbn must have 8 to 13 characters");
             return false;
-        } else if (!existingBookList.isPresent()) {
-            response.setMessage("Isbn is already exists");
-            return false;
         }
 
-        BookList bookList = new BookList(null, bookListRequest.getIsbn().trim(), true, existingBook.get());
+        BookList bookList = new BookList(null, bookListRequest.getIsbn().trim(), true,existingBook.get());
         bookListRepo.save(bookList);
         response.setData(new DtoBookListResponse(bookList.getBook().getCodeBook(),bookList.getBook().getTitle(), bookList.getBook().getAuthor(), bookListRepo.countByBookIdAndIsAvailableIsTrue(bookList.getBook().getId())));
         return true;
     }
 
-    public Page<DtoBookListIsbn> pageView(int page, int limit){
+    public Page<DtoBookListResponse> pageView(int page, int limit){
         Pageable pageable = PageRequest.of(page, limit);
-        Page<BookList> result =  bookListRepo.findByIsDeletedIsFalse(pageable);
-        List<DtoBookListIsbn> listBook = new ArrayList<>();
-        for (BookList bookData: result.getContent()){
-            DtoBookListIsbn bookListResponse = new DtoBookListIsbn(
-                    bookData.getBook().getTitle(),bookData.getIsbn(),bookData.getBook().getAuthor(), bookData.getIsAvailable());
-            listBook.add(bookListResponse);
-        }
-        return new PageImpl(listBook, PageRequest.of(page, limit), result.getTotalPages());
+        Page<BookList> result =  bookListRepo.findBookListWithTotalBook(pageable);
+        return new PageImpl(result.getContent(), PageRequest.of(page, limit), result.getTotalPages());
     }
 
     public Boolean updateStatus(Long id, BookList bookList, Response response){
@@ -79,8 +71,8 @@ public class BookListService {
         return true;
     }
 
-    public Boolean updateAvailableBook(Long id){
-        Optional<BookList> bookList = bookListRepo.findByIdAndIsDeletedIsFalse(id);
+    public Boolean updateAvailableBook(String isbn){
+        Optional<BookList> bookList = bookListRepo.findByIsbnAndIsDeletedIsFalse(isbn);
         bookList.get().setIsAvailable(false);
         bookListRepo.save(bookList.get());
         return true;
@@ -92,8 +84,8 @@ public class BookListService {
         bookListRepo.save(bookList.get());
         return true;
     }
-    public Boolean softDelete(Long id, Response response){
-        Optional<BookList> existingBookList = bookListRepo.findByIdAndIsDeletedIsFalseAndIsAvailableIsTrue(id);
+    public Boolean softDelete(String isbn, Response response){
+        Optional<BookList> existingBookList = bookListRepo.findByIsbnAndIsDeletedIsFalseAndIsAvailableIsTrue(isbn);
 
         if (!existingBookList.isPresent()){
             response.setMessage("Book List Not Found");

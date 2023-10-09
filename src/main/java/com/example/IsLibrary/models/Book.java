@@ -2,21 +2,22 @@ package com.example.IsLibrary.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Data
-@Accessors(chain = true)
 @AllArgsConstructor
 @Entity
-public class Book extends BaseClass{
+public class Book extends BaseClass implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
     private String codeBook;
     private String title;
     private String author;

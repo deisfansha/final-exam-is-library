@@ -41,7 +41,7 @@ public class BookListController {
 
     @GetMapping("/page")
     public ResponseEntity pageViewAll(@RequestParam int page, @RequestParam int limit){
-        Page<DtoBookListIsbn> bookList = bookListService.pageView(page, limit);
+        Page<DtoBookListResponse> bookList = bookListService.pageView(page, limit);
         response.setMessage("Success");
         response.setData(bookList);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -61,8 +61,8 @@ public class BookListController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity softDeleteBook(@PathVariable Long id){
-        Boolean deleted = bookListService.softDelete(id, response);
+    public ResponseEntity softDeleteBook(@PathVariable String isbn){
+        Boolean deleted = bookListService.softDelete(isbn, response);
         if (!deleted){
             response.setData(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

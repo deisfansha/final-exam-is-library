@@ -1,29 +1,15 @@
 package com.example.IsLibrary.dto.response;
 
 import com.example.IsLibrary.models.Member;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
 public class DtoBorrowBookByMember {
-    private Member member;
+    private String name;
+    private String code;
+    private String gender;
     private Long total;
 
-    public DtoBorrowBookByMember(Member member, Long total) {
-        this.member = member;
-        this.total = total;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public Long getTotal() {
-        return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
-    }
 }

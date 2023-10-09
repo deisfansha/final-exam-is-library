@@ -12,6 +12,4 @@ public class Dto3MemberWithPenalty {
     private String name;
     private Long pay;
 
-    public Dto3MemberWithPenalty() {
-    }
 }
